@@ -68,6 +68,8 @@ import {
   parsePhoneNumber,
 } from "@/Utils/utils";
 
+import { CoverImage } from "./CoverImage";
+
 interface FacilityProps {
   facilityId?: string;
 }
@@ -162,6 +164,9 @@ export const FacilityCreate = (props: FacilityProps) => {
   const [stateId, setStateId] = useState<number>();
   const [districtId, setDistrictId] = useState<number>();
   const [localBodyId, setLocalBodyId] = useState<number>();
+  const [_facilityName, setFacilityName] = useState("");
+  const [uploadCoverImage, setUploadCoverImage] = useState(false);
+  const [_coverImageURL, setCoverImageURL] = useState<string>();
   const { goBack } = useAppHistory();
   const headerText = !facilityId ? "Create Facility" : "Update Facility";
   const buttonText = !facilityId ? "Save Facility" : "Update Facility";
@@ -213,7 +218,7 @@ export const FacilityCreate = (props: FacilityProps) => {
       },
       {
         id: 2,
-        name: "Bed Capacity",
+        name: "Cover Image",
         onClick: () => {
           setCurrentStep(2);
         },
@@ -227,12 +232,26 @@ export const FacilityCreate = (props: FacilityProps) => {
       },
       {
         id: 3,
-        name: "Staff Capacity",
+        name: "Bed Capacity",
         onClick: () => {
           setCurrentStep(3);
         },
+        status:
+          currentStep === 3
+            ? "current"
+            : currentStep > 3
+              ? "complete"
+              : "upcoming",
         disabled: createdFacilityId == "",
-        status: currentStep === 3 ? "current" : "upcoming",
+      },
+      {
+        id: 4,
+        name: "Staff Capacity",
+        onClick: () => {
+          setCurrentStep(4);
+        },
+        disabled: createdFacilityId == "",
+        status: currentStep === 4 ? "current" : "upcoming",
       },
     ];
   };
@@ -259,6 +278,9 @@ export const FacilityCreate = (props: FacilityProps) => {
           const formData = {
             facility_type: data.facility_type ? data.facility_type : "",
             name: data.name ? data.name : "",
+            read_cover_image_url: data.read_cover_image_url
+              ? data.read_cover_image_url
+              : "",
             state: data.state ? data.state : 0,
             district: data.district ? data.district : 0,
             local_body: data.local_body ? data.local_body : 0,
@@ -289,6 +311,7 @@ export const FacilityCreate = (props: FacilityProps) => {
           setStateId(data.state);
           setDistrictId(data.district);
           setLocalBodyId(data.local_body);
+          setCoverImageURL(data.read_cover_image_url);
         } else {
           navigate(`/facility/${facilityId}`);
         }
@@ -510,6 +533,7 @@ export const FacilityCreate = (props: FacilityProps) => {
 
       if (res?.ok && requestData) {
         const id = requestData.id;
+        setFacilityName(requestData.name ? requestData.name : "");
         dispatch({ type: "set_form", form: initForm });
         if (!facilityId) {
           Notification.Success({
@@ -650,7 +674,7 @@ export const FacilityCreate = (props: FacilityProps) => {
   };
 
   switch (currentStep) {
-    case 3:
+    case 4:
       return (
         <Page
           title={headerText}
@@ -687,7 +711,7 @@ export const FacilityCreate = (props: FacilityProps) => {
           </div>
         </Page>
       );
-    case 2:
+    case 3:
       return (
         <Page
           title={headerText}
@@ -721,6 +745,26 @@ export const FacilityCreate = (props: FacilityProps) => {
               </div>
             </div>
             <div>{capacityList}</div>
+          </div>
+        </Page>
+      );
+    case 2:
+      return (
+        <Page
+          title={headerText}
+          crumbsReplacements={{
+            [facilityId || "????"]: { name: state.form.name },
+          }}
+        >
+          <Steps steps={getSteps()} />
+          <div className="mt-3">
+            <CoverImage
+              uploadCoverImage={uploadCoverImage}
+              setUploadCoverImage={setUploadCoverImage}
+              createdFacilityId={createdFacilityId}
+              currentStep={currentStep}
+              setCurrentStep={setCurrentStep}
+            />
           </div>
         </Page>
       );
