@@ -1,6 +1,7 @@
 import CentralNursingStation from "@/components/Facility/CentralNursingStation";
 import DischargedPatientsList from "@/components/Facility/DischargedPatientsList";
 import { FacilityConfigure } from "@/components/Facility/FacilityConfigure";
+import { FacilityCover } from "@/components/Facility/FacilityCover";
 import { FacilityCreate } from "@/components/Facility/FacilityCreate";
 import { FacilityHome } from "@/components/Facility/FacilityHome";
 import { FacilityList } from "@/components/Facility/FacilityList";
@@ -14,6 +15,9 @@ import FacilityLocationRoutes from "@/Routers/routes/FacilityLocationRoutes";
 const FacilityRoutes: AppRoutes = {
   "/facility": () => <FacilityList />,
   "/facility/create": () => <FacilityCreate />,
+  "/facility/:facilityId/cover": ({ facilityId }) => (
+    <FacilityCover facilityId={facilityId} />
+  ),
   "/facility/:facilityId/update": ({ facilityId }) => (
     <FacilityCreate facilityId={facilityId} />
   ),
