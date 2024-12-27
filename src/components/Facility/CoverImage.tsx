@@ -1,5 +1,5 @@
 import careConfig from "@careConfig";
-import { navigate } from "raviger";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -10,9 +10,9 @@ import { LocalStorageKeys } from "@/common/constants";
 
 import * as Notification from "@/Utils/Notifications";
 import routes from "@/Utils/request/api";
+import query from "@/Utils/request/query";
 import request from "@/Utils/request/request";
 import uploadFile from "@/Utils/request/uploadFile";
-import useTanStackQueryInstead from "@/Utils/request/useQuery";
 import { sleep } from "@/Utils/utils";
 
 interface CoverImageProps {
@@ -21,20 +21,27 @@ interface CoverImageProps {
 
 export const CoverImage = ({ facilityId }: CoverImageProps) => {
   const { t } = useTranslation();
+  const queryClient = useQueryClient();
 
   const [openUploadModal, setOpenUploadModal] = useState(false);
 
-  const { data: facilityData, refetch: facilityFetch } =
-    useTanStackQueryInstead(routes.getPermittedFacility, {
-      pathParams: {
-        id: facilityId,
-      },
-      onResponse: ({ res }) => {
-        if (!res?.ok) {
-          navigate("/not-found");
-        }
-      },
-    });
+  const { data } = useQuery({
+    queryKey: ["facility", facilityId],
+    queryFn: query(routes.getPermittedFacility, {
+      pathParams: { id: facilityId },
+    }),
+  });
+
+  const refetchFacility = async () => {
+    try {
+      await queryClient.invalidateQueries({
+        queryKey: ["facility", facilityId],
+        refetchType: "active",
+      });
+    } catch (error) {
+      Notification.Error({ msg: "Unable to fetch facility cover image" });
+    }
+  };
 
   const handleCoverImageUpload = async (file: File, onError: () => void) => {
     const formData = new FormData();
@@ -52,7 +59,7 @@ export const CoverImage = ({ facilityId }: CoverImageProps) => {
       async (xhr: XMLHttpRequest) => {
         if (xhr.status === 200) {
           await sleep(1000);
-          facilityFetch();
+          refetchFacility();
           Notification.Success({ msg: "Cover image updated." });
           setOpenUploadModal(false);
         } else {
@@ -72,7 +79,7 @@ export const CoverImage = ({ facilityId }: CoverImageProps) => {
     });
     if (res?.ok) {
       Notification.Success({ msg: "Cover image deleted" });
-      facilityFetch();
+      refetchFacility();
       setOpenUploadModal(false);
     } else {
       onError();
@@ -84,7 +91,7 @@ export const CoverImage = ({ facilityId }: CoverImageProps) => {
       <AvatarEditModal
         title={t("edit_cover_photo")}
         open={openUploadModal}
-        imageUrl={facilityData?.read_cover_image_url}
+        imageUrl={data?.read_cover_image_url}
         handleUpload={handleCoverImageUpload}
         handleDelete={handleCoverImageDelete}
         onClose={() => setOpenUploadModal(false)}
@@ -92,8 +99,8 @@ export const CoverImage = ({ facilityId }: CoverImageProps) => {
       <div>
         <AvatarEditable
           id="facility-coverimage"
-          imageUrl={facilityData?.read_cover_image_url}
-          name={facilityData?.name ? facilityData.name : ""}
+          imageUrl={data?.read_cover_image_url}
+          name={data?.name ? data.name : ""}
           editable={true}
           onClick={() => setOpenUploadModal(true)}
           className="md:mr-2 lg:mr-6 md:w-80 md:h-80 lg:h-100 lg:w-100"
