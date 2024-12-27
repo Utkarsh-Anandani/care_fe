@@ -15,7 +15,7 @@ import FacilityLocationRoutes from "@/Routers/routes/FacilityLocationRoutes";
 const FacilityRoutes: AppRoutes = {
   "/facility": () => <FacilityList />,
   "/facility/create": () => <FacilityCreate />,
-  "/facility/:facilityId/cover": ({ facilityId }) => (
+  "/facility/:facilityId/upload-cover-image": ({ facilityId }) => (
     <FacilityCover facilityId={facilityId} />
   ),
   "/facility/:facilityId/update": ({ facilityId }) => (

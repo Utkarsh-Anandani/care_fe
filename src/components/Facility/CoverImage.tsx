@@ -3,6 +3,9 @@ import { navigate } from "raviger";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
+import AvatarEditModal from "@/components/Common/AvatarEditModal";
+import AvatarEditable from "@/components/Common/AvatarEditable";
+
 import { LocalStorageKeys } from "@/common/constants";
 
 import * as Notification from "@/Utils/Notifications";
@@ -11,9 +14,6 @@ import request from "@/Utils/request/request";
 import uploadFile from "@/Utils/request/uploadFile";
 import useTanStackQueryInstead from "@/Utils/request/useQuery";
 import { sleep } from "@/Utils/utils";
-
-import AvatarEditModal from "../Common/AvatarEditModal";
-import AvatarEditable from "../Common/AvatarEditable";
 
 interface CoverImageProps {
   facilityId: string;

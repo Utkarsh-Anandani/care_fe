@@ -414,7 +414,7 @@ export const FacilityCreate = (props: FacilityProps) => {
             msg: "Facility updated successfully",
           });
         }
-        navigate(`/facility/${id}/cover`);
+        navigate(`/facility/${id}/upload-cover-image`);
       }
       setIsLoading(false);
     }

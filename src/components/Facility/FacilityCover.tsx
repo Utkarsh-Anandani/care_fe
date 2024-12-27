@@ -1,20 +1,36 @@
 import { navigate } from "raviger";
 import { useEffect } from "react";
 
+import { Cancel, Submit } from "@/components/Common/ButtonV2";
+import Page from "@/components/Common/Page";
+import { CoverImage } from "@/components/Facility/CoverImage";
+
 import useAuthUser from "@/hooks/useAuthUser";
 
 import * as Notification from "@/Utils/Notifications";
-
-import { Cancel, Submit } from "../Common/ButtonV2";
-import Page from "../Common/Page";
-import { CoverImage } from "./CoverImage";
+import routes from "@/Utils/request/api";
+import useTanStackQueryInstead from "@/Utils/request/useQuery";
 
 interface FacilityProps {
-  facilityId?: string;
+  facilityId: string;
 }
 
 export const FacilityCover = (props: FacilityProps) => {
   const { facilityId } = props;
+
+  const { data: facilityData } = useTanStackQueryInstead(
+    routes.getPermittedFacility,
+    {
+      pathParams: {
+        id: facilityId,
+      },
+      onResponse: ({ res }) => {
+        if (!res?.ok) {
+          navigate("/not-found");
+        }
+      },
+    },
+  );
 
   const authUser = useAuthUser();
   useEffect(() => {
@@ -36,12 +52,12 @@ export const FacilityCover = (props: FacilityProps) => {
       title="Cover Image"
       className="h-[90vh]"
       crumbsReplacements={{
-        [facilityId || "????"]: { name: "Upload" },
+        [facilityId]: { name: facilityData?.name },
       }}
     >
       <div className="md:pt-[10vh] md:pr-[5vw] pt-[5vh]">
         <div className="flex flex-col md:flex-row gap-5 relative">
-          <CoverImage facilityId={facilityId ? facilityId : ""} />
+          <CoverImage facilityId={facilityId} />
           <div className="w-full h-full sm:px-[10vh] md:px-0">
             <p className="text-2xl font-extrabold mb-3">
               Hover the default cover image to upload a new cover image for your
