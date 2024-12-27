@@ -1,3 +1,4 @@
+import { useQuery } from "@tanstack/react-query";
 import { navigate } from "raviger";
 import { useEffect } from "react";
 
@@ -9,7 +10,7 @@ import useAuthUser from "@/hooks/useAuthUser";
 
 import * as Notification from "@/Utils/Notifications";
 import routes from "@/Utils/request/api";
-import useTanStackQueryInstead from "@/Utils/request/useQuery";
+import query from "@/Utils/request/query";
 
 interface FacilityProps {
   facilityId: string;
@@ -18,19 +19,12 @@ interface FacilityProps {
 export const FacilityCover = (props: FacilityProps) => {
   const { facilityId } = props;
 
-  const { data: facilityData } = useTanStackQueryInstead(
-    routes.getPermittedFacility,
-    {
-      pathParams: {
-        id: facilityId,
-      },
-      onResponse: ({ res }) => {
-        if (!res?.ok) {
-          navigate("/not-found");
-        }
-      },
-    },
-  );
+  const { data } = useQuery({
+    queryKey: ["facility", facilityId],
+    queryFn: query(routes.getPermittedFacility, {
+      pathParams: { id: facilityId },
+    }),
+  });
 
   const authUser = useAuthUser();
   useEffect(() => {
@@ -52,7 +46,7 @@ export const FacilityCover = (props: FacilityProps) => {
       title="Cover Image"
       className="h-[90vh]"
       crumbsReplacements={{
-        [facilityId]: { name: facilityData?.name },
+        [facilityId]: { name: data?.name },
       }}
     >
       <div className="md:pt-[10vh] md:pr-[5vw] pt-[5vh]">
