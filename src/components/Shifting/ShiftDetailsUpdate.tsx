@@ -1,6 +1,6 @@
 import careConfig from "@careConfig";
 import { navigate, useQueryParams } from "raviger";
-import { useReducer, useState } from "react";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import Card from "@/CAREUI/display/Card";
@@ -38,6 +38,7 @@ import {
   USER_TYPES,
 } from "@/common/constants";
 
+import { DraftSection, useAutoSaveReducer } from "@/Utils/AutoSave";
 import * as Notification from "@/Utils/Notifications";
 import routes from "@/Utils/request/api";
 import request from "@/Utils/request/request";
@@ -100,18 +101,23 @@ export const ShiftDetailsUpdate = (props: patientShiftProps) => {
           form: action.form,
         };
       }
-      case "set_error": {
+      case "set_errors": {
         return {
           ...state,
           errors: action.errors,
         };
       }
-      default:
+      case "set_state": {
+        if (action.state) return action.state;
         return state;
+      }
     }
   };
 
-  const [state, dispatch] = useReducer(shiftFormReducer, initialState);
+  const [state, dispatch] = useAutoSaveReducer<any>(
+    shiftFormReducer,
+    initialState,
+  );
 
   let requiredFields: any = {
     assigned_facility_object: {
@@ -180,7 +186,7 @@ export const ShiftDetailsUpdate = (props: patientShiftProps) => {
       }
     });
 
-    dispatch({ type: "set_error", errors });
+    dispatch({ type: "set_errors", errors });
     return !isInvalidForm;
   };
 
@@ -330,6 +336,12 @@ export const ShiftDetailsUpdate = (props: patientShiftProps) => {
         }}
       />
       <Card className="mx-auto mt-4 w-full max-w-4xl md:p-6 lg:p-8">
+        <DraftSection
+          handleDraftSelect={(newState: any) => {
+            dispatch({ type: "set_state", state: newState });
+          }}
+          formData={state.form}
+        />
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           <SelectFormField
             name="status"
