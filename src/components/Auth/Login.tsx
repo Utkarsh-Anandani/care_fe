@@ -100,9 +100,12 @@ const Login = (props: { forgot?: boolean }) => {
   // Forgot Password Mutation
   const forgotPasswordMutation = useMutation({
     mutationFn: async (data: { username: string }) => {
-      const response = await request(routes.forgotPassword, {
-        body: data,
-      });
+      const response = await mutate(routes.forgotPassword, { silent: true })(
+        data,
+      );
+      if ("errors" in response) {
+        throw response;
+      }
       return response;
     },
     onSuccess: () => {
@@ -112,6 +115,7 @@ const Login = (props: { forgot?: boolean }) => {
     },
     onError: (error: any) => {
       setErrors(error);
+      Notification.Error({ msg: "Network Error" });
     },
   });
 
