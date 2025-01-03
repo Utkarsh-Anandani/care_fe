@@ -98,26 +98,27 @@ const Login = (props: { forgot?: boolean }) => {
   });
 
   // Forgot Password Mutation
-  const forgotPasswordMutation = useMutation({
-    mutationFn: async (data: { username: string }) => {
-      const response = await mutate(routes.forgotPassword, { silent: true })(
-        data,
-      );
-      if ("errors" in response) {
-        throw response;
-      }
-      return response;
-    },
-    onSuccess: () => {
-      Notification.Success({
-        msg: t("password_sent"),
-      });
-    },
-    onError: (error: any) => {
-      setErrors(error);
-      Notification.Error({ msg: "Network Error" });
-    },
-  });
+  const { mutate: forgotPasswordMutation, isPending: forgotPasswordPending } =
+    useMutation({
+      mutationFn: async (data: { username: string }) => {
+        const response = await mutate(routes.forgotPassword, { silent: true })(
+          data,
+        );
+        if ("errors" in response) {
+          throw response;
+        }
+        return response;
+      },
+      onSuccess: () => {
+        Notification.Success({
+          msg: t("password_sent"),
+        });
+      },
+      onError: (error: any) => {
+        setErrors(error);
+        Notification.Error({ msg: "Network Error" });
+      },
+    });
 
   // Send OTP Mutation
   const { mutate: sendOtp, isPending: sendOtpPending } = useMutation({
@@ -296,7 +297,7 @@ const Login = (props: { forgot?: boolean }) => {
     const valid = validateForgetData();
     if (!valid) return;
 
-    forgotPasswordMutation.mutate(valid);
+    forgotPasswordMutation(valid);
   };
 
   const onCaptchaChange = (value: any) => {
@@ -327,7 +328,7 @@ const Login = (props: { forgot?: boolean }) => {
   // Loading state derived from mutations
   const isLoading =
     staffLoginMutation.isPending ||
-    forgotPasswordMutation.isPending ||
+    forgotPasswordPending ||
     sendOtpPending ||
     verifyOtpPending;
 
