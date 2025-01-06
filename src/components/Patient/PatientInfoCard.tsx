@@ -39,22 +39,22 @@ export default function PatientInfoCard(props: PatientInfoCardProps) {
     <>
       <section className="flex flex-col lg:flex-row">
         <div
-          className="flex w-full flex-col bg-white px-4 pt-2 lg:flex-row"
+          className="flex w-full flex-col bg-white px-4 pt-4 lg:flex-row"
           id="patient-infobadges"
         >
-          <div className="flex justify-evenly lg:justify-normal">
+          <div className="flex justify-items-start gap-5 lg:justify-normal">
             <div className="flex flex-col items-start lg:items-center">
               <div className="w-24 min-w-20 bg-secondary-200 h-24">
                 <Avatar name={patient.name} className="w-full h-full" />
               </div>
             </div>
-            <div className="flex items-center justify-center">
+            <div className="flex justify-center">
               <div
-                className="mb-2 flex flex-col justify-center text-xl font-semibold capitalize lg:hidden"
+                className="mb-2 flex flex-col text-xl font-semibold capitalize lg:hidden"
                 id="patient-name-consultation"
               >
                 {patient.name}
-                <div className="ml-3 mr-2 mt-[6px] text-sm font-semibold text-secondary-600">
+                <div className="mt-[6px] text-sm font-semibold text-secondary-600">
                   {formatPatientAge(patient, true)} • {patient.gender}
                 </div>
               </div>
@@ -71,7 +71,7 @@ export default function PatientInfoCard(props: PatientInfoCardProps) {
                   {formatPatientAge(patient, true)} • {patient.gender}
                 </div>
               </div>
-              <div className="grid gap-4 grid-cols-3">
+              <div className="grid gap-4 grid-cols-3 mt-2 px-2">
                 <div className="flex flex-col space-y-1">
                   <span className="text-xs text-muted-foreground font-medium">
                     Start Date
