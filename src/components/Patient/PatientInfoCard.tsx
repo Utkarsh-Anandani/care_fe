@@ -61,7 +61,7 @@ export default function PatientInfoCard(props: PatientInfoCardProps) {
             </div>
           </div>
           <div className="flex w-full flex-col items-center gap-4 space-y-2 lg:items-start lg:gap-0 lg:pl-2">
-            <div className="flex flex-col flex-wrap items-center justify-center lg:items-start lg:justify-normal">
+            <div className="w-full flex flex-col flex-wrap justify-center lg:items-start lg:justify-normal">
               <div
                 className="hidden flex-row text-xl font-semibold capitalize lg:flex"
                 id="patient-name-consultation"
