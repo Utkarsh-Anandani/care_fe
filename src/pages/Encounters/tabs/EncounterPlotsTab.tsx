@@ -23,7 +23,7 @@ export const EncounterPlotsTab = (props: EncounterTabProps) => {
   const { t } = useTranslation();
   const [qParams, setQParams] = useQueryParams<QueryParams>();
 
-  const isSmallDevice = useBreakpoints({ default: true, md: false });
+  const plotColumns = useBreakpoints({ default: 1, md: 2 });
 
   const { data, isLoading } = useQuery<ObservationPlotConfig>({
     queryKey: ["plots-config"],
@@ -62,7 +62,7 @@ export const EncounterPlotsTab = (props: EncounterTabProps) => {
             <ObservationVisualizer
               patientId={props.patient.id}
               codeGroups={tab.groups}
-              gridCols={isSmallDevice ? 1 : 2}
+              gridCols={plotColumns}
             />
           </TabsContent>
         ))}
