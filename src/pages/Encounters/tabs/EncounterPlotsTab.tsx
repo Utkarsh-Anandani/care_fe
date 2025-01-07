@@ -11,7 +11,7 @@ import {
 } from "@/components/Common/Charts/ObservationChart";
 import Loading from "@/components/Common/Loading";
 
-import useWindowDimensions from "@/hooks/useWindowDimensions";
+import useBreakpoints from "@/hooks/useBreakpoints";
 
 import { EncounterTabProps } from "@/pages/Encounters/EncounterShow";
 
@@ -23,7 +23,7 @@ export const EncounterPlotsTab = (props: EncounterTabProps) => {
   const { t } = useTranslation();
   const [qParams, setQParams] = useQueryParams<QueryParams>();
 
-  const { width } = useWindowDimensions();
+  const isSmallDevice = useBreakpoints({ default: true, md: false });
 
   const { data, isLoading } = useQuery<ObservationPlotConfig>({
     queryKey: ["plots-config"],
@@ -62,7 +62,7 @@ export const EncounterPlotsTab = (props: EncounterTabProps) => {
             <ObservationVisualizer
               patientId={props.patient.id}
               codeGroups={tab.groups}
-              gridCols={width >= 768 ? 2 : 1}
+              gridCols={isSmallDevice ? 1 : 2}
             />
           </TabsContent>
         ))}
