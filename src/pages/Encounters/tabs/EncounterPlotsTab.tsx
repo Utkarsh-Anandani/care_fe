@@ -11,6 +11,8 @@ import {
 } from "@/components/Common/Charts/ObservationChart";
 import Loading from "@/components/Common/Loading";
 
+import useWindowDimensions from "@/hooks/useWindowDimensions";
+
 import { EncounterTabProps } from "@/pages/Encounters/EncounterShow";
 
 type QueryParams = {
@@ -20,6 +22,8 @@ type QueryParams = {
 export const EncounterPlotsTab = (props: EncounterTabProps) => {
   const { t } = useTranslation();
   const [qParams, setQParams] = useQueryParams<QueryParams>();
+
+  const { width } = useWindowDimensions();
 
   const { data, isLoading } = useQuery<ObservationPlotConfig>({
     queryKey: ["plots-config"],
@@ -58,7 +62,7 @@ export const EncounterPlotsTab = (props: EncounterTabProps) => {
             <ObservationVisualizer
               patientId={props.patient.id}
               codeGroups={tab.groups}
-              gridCols={window.innerWidth >= 768 ? 2 : 1}
+              gridCols={width >= 768 ? 2 : 1}
             />
           </TabsContent>
         ))}
