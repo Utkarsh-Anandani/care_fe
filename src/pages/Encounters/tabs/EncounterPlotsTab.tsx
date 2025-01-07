@@ -43,20 +43,22 @@ export const EncounterPlotsTab = (props: EncounterTabProps) => {
         value={currentTabId}
         onValueChange={(value) => setQParams({ plot: value })}
       >
-        <TabsList>
-          {data.map((tab) => (
-            <TabsTrigger key={tab.id} value={tab.id}>
-              {tab.name}
-            </TabsTrigger>
-          ))}
-        </TabsList>
+        <div className="overflow-x-scroll w-full">
+          <TabsList>
+            {data.map((tab) => (
+              <TabsTrigger key={tab.id} value={tab.id}>
+                {tab.name}
+              </TabsTrigger>
+            ))}
+          </TabsList>
+        </div>
 
         {data.map((tab) => (
           <TabsContent key={tab.id} value={tab.id}>
             <ObservationVisualizer
               patientId={props.patient.id}
               codeGroups={tab.groups}
-              gridCols={2}
+              gridCols={window.innerWidth >= 768 ? 2 : 1}
             />
           </TabsContent>
         ))}
