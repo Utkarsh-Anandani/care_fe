@@ -101,7 +101,7 @@ export default function PatientInfoCard(props: PatientInfoCardProps) {
         >
           <div className="flex justify-items-start gap-5 lg:justify-normal">
             <div className="flex flex-col items-start lg:items-center">
-              <div className="w-24 min-w-20 bg-secondary-200 h-24">
+              <div className="w-16 min-w-16 bg-secondary-200 h-16 md:w-24 md:h-24">
                 <Avatar name={patient.name} className="w-full h-full" />
               </div>
             </div>
@@ -162,7 +162,7 @@ export default function PatientInfoCard(props: PatientInfoCardProps) {
               </div>
               <div className="flex flex-wrap items-center gap-2 text-sm sm:flex-row mt-2">
                 <div
-                  className="flex w-full flex-wrap items-center justify-center gap-2 text-sm text-secondary-900 sm:flex-row sm:text-sm md:pr-10 lg:justify-normal"
+                  className="flex w-full flex-wrap items-center justify-start gap-2 text-sm text-secondary-900 sm:flex-row sm:text-sm md:pr-10 lg:justify-normal"
                   id="patient-consultationbadges"
                 >
                   <Popover>
