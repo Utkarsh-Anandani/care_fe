@@ -30,6 +30,8 @@ import {
 
 import { Avatar } from "@/components/Common/Avatar";
 
+import useBreakpoints from "@/hooks/useBreakpoints";
+
 import routes from "@/Utils/request/api";
 import mutate from "@/Utils/request/mutate";
 import { formatDateTime, formatPatientAge } from "@/Utils/utils";
@@ -63,6 +65,8 @@ export default function PatientInfoCard(props: PatientInfoCardProps) {
   const { patient, encounter } = props;
   const { t } = useTranslation();
   const queryClient = useQueryClient();
+
+  const isSmallDevice = useBreakpoints({ md: false, default: true });
 
   const { mutate: updateEncounter } = useMutation({
     mutationFn: mutate(routes.encounter.update, {
@@ -188,7 +192,10 @@ export default function PatientInfoCard(props: PatientInfoCardProps) {
                         </Badge>
                       </div>
                     </PopoverTrigger>
-                    <PopoverContent className="w-auto p-2">
+                    <PopoverContent
+                      align={isSmallDevice ? "start" : "center"}
+                      className="w-auto p-2"
+                    >
                       <div className="space-y-2">
                         <h4 className="font-medium text-sm">Status History</h4>
                         {encounter.status_history.history.map(
@@ -229,7 +236,10 @@ export default function PatientInfoCard(props: PatientInfoCardProps) {
                         </Badge>
                       </div>
                     </PopoverTrigger>
-                    <PopoverContent className="w-auto p-2">
+                    <PopoverContent
+                      align={isSmallDevice ? "end" : "center"}
+                      className="w-auto p-2"
+                    >
                       <div className="space-y-2">
                         <h4 className="font-medium text-sm">Class History</h4>
                         {encounter.encounter_class_history.history.map(
