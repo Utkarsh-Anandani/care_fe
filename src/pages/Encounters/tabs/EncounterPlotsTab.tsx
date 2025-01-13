@@ -23,7 +23,7 @@ export const EncounterPlotsTab = (props: EncounterTabProps) => {
   const { t } = useTranslation();
   const [qParams, setQParams] = useQueryParams<QueryParams>();
 
-  const plotColumns = useBreakpoints({ default: 1, md: 2 });
+  const plotColumns = useBreakpoints({ default: 1, lg: 2 });
 
   const { data, isLoading } = useQuery<ObservationPlotConfig>({
     queryKey: ["plots-config"],
