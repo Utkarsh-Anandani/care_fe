@@ -117,7 +117,7 @@ export default function PatientInfoCard(props: PatientInfoCardProps) {
                   {formatPatientAge(patient, true)} • {patient.gender}
                 </div>
               </div>
-              <div className="grid gap-4 grid-cols-3 mt-2 px-2">
+              <div className="grid gap-4 grid-cols-3 mt-2 md:mt-0">
                 <div className="flex flex-col space-y-1">
                   <span className="text-xs text-muted-foreground font-medium">
                     Start Date
